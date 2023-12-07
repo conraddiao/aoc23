@@ -1,9 +1,3 @@
-import {
-    data,
-    test1,
-    test2
-} from './modules/01.mjs';
-
 function fun(txt) {
     const lines = txt.trim().split('\n');
 
@@ -15,4 +9,4 @@ function fun(txt) {
     return values.reduce((s, v) => s + v);
 }
 
-fun(test1)
+console.log(fun(test1))

@@ -243,7 +243,13 @@ function advent(string) {
     };
   });
   //console.log(cards)
-  // given a set of cards, store the length of the cards, for each card, until you reach the score of the card, push onto the set of cards the following card. once you have done so for all cards, check the lenght of the array. if it does not match the initial length, repeat this proccess.
+  
+  //given an array of cards, store the length of the cards
+  //for each card: 
+  //until you reach the score of the card, push onto the array the following card. 
+  //once you have done so for all cards, check the length of the array. 
+  //if it does not match the initial length, repeat this proccess.
+  //otherwise, return the length of the array of cards
 
   function recur(cards, start) {
     let initCount = cards.length;
@@ -252,7 +258,6 @@ function advent(string) {
             cards.push(cards[cards[i].cardNumber + j]);
           }
         }
-        //return initCount != cards.length ? recur(cards, initCount) : cards;
         return cards;
     }
   recur(cards, 0);

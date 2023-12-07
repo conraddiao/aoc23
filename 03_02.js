@@ -150,82 +150,10 @@ const data = `...788.............................54.........501...........555...
 .......&...625......*.........7*121...........494......=...8......*....@..............................*..........*......998*973.......$.....
 ....691............614...795..........152............120...........238..496...........................477..........................994......`
 
-function advent(string) {
-    width = string.search('\n') + 1;
-    string = string.replaceAll(/\n/g, '.');
-    const chars = string.split('');
-    const gearNumbers = chars.map((c, i, a) => {
-        const n = a[i - width];
-        const e = a[i + 1];
-        const s = a[i + width];
-        const w = a[i - 1];
-        const ne = a[i - width + 1];
-        const se = a[i + width + 1];
-        const sw = a[i - width - 1];
-        const nw = a[i + width - 1];
-        const dirs = [n, e, s, w, ne, se, sw, nw]
-            .map((v) => v === undefined ? '.' : v);
-        return (/[0-9]/.test(c) && dirs
-            .map((v) => /\*/.test(v))
-            .reduce((acc, cur) => {
-                return (cur + acc)
-            }, 0) == 1)
-    });
-
-    const gears = chars.map((c, i, a) => {
-        const n = a[i - width];
-        const e = a[i + 1];
-        const s = a[i + width];
-        const w = a[i - 1];
-        const ne = a[i - width + 1];
-        const se = a[i + width + 1];
-        const sw = a[i - width - 1];
-        const nw = a[i + width - 1];
-        const dirs = [n, e, s, w, ne, se, sw, nw]
-            .map((v) => v === undefined ? '.' : v);
-        return /\*/.test(c)
-    });
-
-    //console.log(chars.map((c, i, a) => [a[i], gearNumbers[i], gears[i]]));
-
-    for (let i = 0; i < chars.length; i++) {
-        if (gearNumbers[i]) {
-            for (let j = i, start = 0; j >= start; j--) {
-                if (/\d/.test(chars[j])) {
-                    gearNumbers[j] = true;
-                } else {
-                    break;
-                }
-            }
-            for (let k = i; k <= chars.length; k++) {
-                if (/\d/.test(chars[k])) {
-                    gearNumbers[k] = true;
-                } else {
-                    break;
-                }
-            }
-            start = i;
-        }
-    }
-
-
-
-    return gearNumbers.map((c, i, a) => [chars[i], a[i]]).reduce((acc, [char, isDigit, isGear]) => {
-        if (isDigit || isGear) {
-            acc[acc.length - 1] += char;
-        } else {
-            if (acc[acc.length - 1] !== undefined) {
-                acc.push('');
-            }
-        }
-        return acc;
-    }, [''])//.map((c) => Number(c)).filter((n) => n != 0).reduce((acc, cur) => acc + cur, 0);
-}
-
 // find the index of each gear, where a gear is defined by an * that touches two numbers,
 // for each char, check =='*', if it does, check if that * touches a number that is more than 1 index aways from the current cell. If it does, for both the current index and the index of the touch, evaluate the number that it's a part of, and multiply the two. Then move on to the 
 
-function advent2(string) {
+function advent(string) {
     width = string.search('\n') + 1;
     string = string.replaceAll(/\n/g, '.');
     const chars = string.split('');
@@ -293,4 +221,4 @@ function advent2(string) {
     }).reduce((pow, sum) => sum + pow, 0)
 }
 
-console.log(advent2(data));
+console.log(advent(data));
