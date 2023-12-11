@@ -227,6 +227,8 @@ Card 219: 63 29 45 94 49 57 24 40 71 99 | 86 37 23 13 67 19 36 69 22 48 20 10 44
 Card 220:  7 42 25 84 54 11 88  6 55 73 | 86  5 82 70 49 80 21 36 16 34 17 77 44 74 61  1  4 39 45 47  3 81 57 60 24`;
 
 function advent(string) {
+  const initDate = (new Date()).getTime()
+
   let cards = string.split("\n").map((line) => {
     let [cardNumber, hnums, wnums] = line
       .split(/\:|\|/)
@@ -261,6 +263,9 @@ function advent(string) {
         return cards;
     }
   recur(cards, 0);
-  return cards.length;
+  return cards;
+
+  //const endDate = (new Date()).getTime()
+  //return initDate - endDate;
 }
 console.log(advent(data));
