@@ -271,35 +271,36 @@ humidity-to-location map:
 56 93 4`
 
 function advent(string) {
-    let testSeeds = [1, 11];
+    let testSeeds = [0, 8, 20, 15];
+    let ranges = [[1, 8], [20, 15]];
     let testMap = [0, 0, 10, 30, 10, 10];
+    let maps = [[0, 0, 10], [30, 10, 10]];
 
-    //for a given map, check if the seed is greater than or equal to the index 1 of the map (input start) 
-    //and less than or equal to index 1 of the map plus index 2 of the map.
-    // if both are true, then return the seed plus index 1 of the map
-
-    function evalMap(seeds, map) {
-        outputMap = [];
-        seeds.map((seed, i, a) => {
-            let outputVal = seed;
+    function mapRange(ranges, map) {
+        //range = [int, int]
+        //map = [int, int, int...]
+        let output = []
+        let rangeIterator = 0;
+        while (rangeIterator < ranges.length) {
+            let start = ranges[rangeIterator]
+            let end = ranges[rangeIterator] + ranges[rangeIterator + 1] - 1
             let mapIterator = 0;
             while (mapIterator < map.length) {
-                //console.log([map[mapIterator + 1], seed, map[mapIterator + 1]+map[mapIterator + 2]])
-                if (seed >= map[mapIterator + 1] && seed < map[mapIterator + 1] + map[mapIterator + 2]) {
-                        outputVal = seed - map[mapIterator + 1] + map[mapIterator];
-                        //console.log([true, seed - map[mapIterator + 1] + map[mapIterator]])
-                        break;
-                }
-                mapIterator+=3;
-            };
-            //console.log(outputVal)
-            outputMap.push(outputVal);
-        })
-        return outputMap;
+                let rangeStart = map[mapIterator + 1]
+                let rangeEnd = map[mapIterator + 1] + map[mapIterator + 2]
+                let outStart = map[mapIterator]
+                start = rangeStart <= start > rangeEnd ? start - rangeStart + outStart : start;
+                end = rangeStart <= end > rangeEnd ? end - rangeStart + outStart : end;
+                output.push([start, end])
+                mapIterator +=3;
+            }
+            rangeIterator +=2;
+        }
+        return output;
     }
 
     let [
-        seeds,
+        seedRanges,
         seedMap,
         soilMap,
         fertMap,
@@ -309,13 +310,54 @@ function advent(string) {
         locMap
     ] = string.substring(7, string.length).split(/\:/).map((substr) => substr.match(/\d+/g).map(Number))
 
-    console.log(seeds);
+    console.log(seedRanges);
     console.log(seedMap);
-
-    //return (evalMap(seeds, seedMap))
-
-    return Math.min(...evalMap(evalMap(evalMap(evalMap(evalMap(evalMap(evalMap(
-       seeds, seedMap),soilMap), fertMap), waterMap), lightMap), tempMap), locMap))
+    console.log(soilMap);
+    return mapRange(seedRanges, seedMap).flat()
 }
 
-console.log(advent(data));
+//for each location output, find the corresponding temp output... and so on, until the corresponding seed ouput.
+
+//for each seed output, for each seedrange, check if the corresponding seedinput is contained in the seed range. if so, return the output location.
+
+function advent2(string) {
+    function mapRanges(map) {
+        let output = []
+        for (i = 0; i < map.length; i += 3) {
+            output.push({
+                outStart: map[i],
+                outEnd: map[0] + map[i + 2] - 1,
+                inStart: map[i + 1],
+                inEnd: map[i + 1] + map[i + 2] - 1
+            })
+        }
+        return output;
+    }
+    let [
+        seedRanges,
+        seedMap,
+        soilMap,
+        fertMap,
+        waterMap,
+        lightMap,
+        tempMap,
+        locMap
+    ] = string.substring(7, string.length).split(/\:/).map((substr) => substr.match(/\d+/g).map(Number))
+
+    seedMap  = mapRanges(seedMap)
+    soilMap  = mapRanges(soilMap)
+    fertMap  = mapRanges(fertMap)
+    waterMap = mapRanges(waterMap)
+    lightMap = mapRanges(lightMap)
+    tempMap  = mapRanges(tempMap)
+    locMap   = mapRanges(locMap)
+
+    function compareMaps(i, o) {
+       i.outStart <= o.inStart < i.outEnd
+    }
+
+    return seedMap;
+}
+
+
+console.log(advent2(test1));
